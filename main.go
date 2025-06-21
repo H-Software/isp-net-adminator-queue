@@ -2,25 +2,23 @@ package main
 
 import (
 	"context"
-	"flag"
 	"github.com/hibiken/asynq"
-	// "github.com/sirupsen/logrus"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
 	// "net/http"
 	"github.com/h-software/isp-net-adminator-queue/internal/log"
-	"strings"
+	"github.com/h-software/isp-net-adminator-queue/internal/queue"
 	"sync"
 	"time"
 	// "github.com/gorilla/handlers"
 	// "github.com/gorilla/mux"
 	// "go.opentelemetry.io/otel/metric"
+	// "github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/propagation"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	sdkresource "go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-	// "github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
 )
 
@@ -102,15 +100,9 @@ func (fn ErrorHandlerFunc) HandleError(ctx context.Context, err error) {
 }
 
 var (
-	// log               *logrus.Logger
 	logger            *log.Logger
 	resource          *sdkresource.Resource
 	initResourcesOnce sync.Once
-
-	flagRedisAddr        = flag.String("redis-addr", "localhost:16379", "Redis server address")
-	flagGroupGracePeriod = flag.Duration("grace-period", 10*time.Second, "Group grace period")
-	flagGroupMaxDelay    = flag.Duration("max-delay", 30*time.Second, "Group max delay")
-	flagGroupMaxSize     = flag.Int("max-size", 2, "Group max size")
 )
 
 const (
@@ -119,23 +111,11 @@ const (
 	// httpAddress        = ":8080"
 	// httpMetricsAddress = ":8081"
 
-	TypeAdminatorWorkItem = "adminator3:workitem:3" // adminator3:workitem:basic
-
-	TypeAdminatorWorkItemAgg = "adminator3:workitem:aggregated" // adminator3:workitem:basic
-
 	// meterName = "adminator-queue-prometheus"
 )
 
 func init() {
-	// log = logrus.New()
 	logger = log.NewLogger(nil)
-	// loglevel := cfg.LogLevel
-	// if loglevel == level_unspecified {
-	// 	loglevel = InfoLevel
-	// }
-	// logger.SetLevel(toInternalLogLevel(loglevel))
-
-	flag.Parse()
 }
 
 func initResource() *sdkresource.Resource {
@@ -205,22 +185,6 @@ func initMeterProvider() *sdkmetric.MeterProvider {
 // 	}
 // }
 
-func aggregate(group string, tasks []*asynq.Task) *asynq.Task {
-	logger.Infof("Aggregating %d tasks from group %q", len(tasks), group)
-	var b strings.Builder
-	for _, t := range tasks {
-		b.Write(t.Payload())
-		b.WriteString("\n")
-	}
-	return asynq.NewTask(TypeAdminatorWorkItemAgg, []byte(b.String()))
-}
-
-func handleWorkItemAggTask(ctx context.Context, task *asynq.Task) error {
-	logger.Infof("Handler received aggregated task")
-	logger.Infof("aggregated messages: %s", task.Payload())
-	return nil
-}
-
 func main() {
 
 	tp := initTracerProvider()
@@ -265,31 +229,12 @@ func main() {
 	// 	panic(err)
 	// }
 
-	srv := asynq.NewServer(
-		asynq.RedisClientOpt{
-			Addr:        *flagRedisAddr,
-			DialTimeout: 2 * time.Second,
-		},
-		asynq.Config{
-			Logger: logger,
-			Queues: map[string]int{
-				"adminator3:workitem": 3,
-			},
-			Concurrency:      1,
-			GroupAggregator:  asynq.GroupAggregatorFunc(aggregate),
-			GroupGracePeriod: *flagGroupGracePeriod,
-			GroupMaxDelay:    *flagGroupMaxDelay,
-			GroupMaxSize:     *flagGroupMaxSize,
-		},
-	)
-
-	// r.PathPrefix(h.RootPath()).Handler(h)
+	srv := queue.RunServer()
 
 	amux := asynq.NewServeMux()
-	amux.HandleFunc(TypeAdminatorWorkItemAgg, handleWorkItemAggTask)
+	amux.HandleFunc(queue.TypeAdminatorWorkItemAgg, queue.HandleWorkItemAggTask)
 
 	if err := srv.Run(amux); err != nil {
 		logger.Fatalf("Failed to start the server: %v", err)
 	}
-
 }
