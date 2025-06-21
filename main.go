@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"sync"
-	"time"
-	"net/http"
 	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
+	"net/http"
+	"sync"
+	"time"
 	// "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/propagation"
@@ -26,9 +26,9 @@ var (
 
 const (
 	DEFAULT_RELOAD_INTERVAL = 10
-	httpAddress = ":8080"
-	httpMetricsAddress = ":8081"
-	meterName = "adminator-queue-prometheus"
+	httpAddress             = ":8080"
+	httpMetricsAddress      = ":8081"
+	meterName               = "adminator-queue-prometheus"
 )
 
 func init() {
@@ -135,10 +135,10 @@ func main() {
 	// loggedRouter := handlers.CombinedLoggingHandler(os.Stdout, router)
 
 	s := &http.Server{
-		Addr:           httpAddress,
-		Handler:        nil,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
+		Addr:         httpAddress,
+		Handler:      nil,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	// start server
