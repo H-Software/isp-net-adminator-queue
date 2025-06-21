@@ -2,6 +2,7 @@
 task manager for [ISP-Adminator](https://github.com/H-Software/isp-net-adminator)
 
 # links
+- https://github.com/czhujer/h-platform-automation-cc-server/blob/master/main.go
 ## boilerplates
 - https://github.com/ardanlabs/service
 - https://github.com/allaboutapps/go-starter
