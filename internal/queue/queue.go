@@ -115,9 +115,7 @@ func HandleAggTaskPayload(ctx context.Context, task *asynq.Task, taskId string, 
 	}
 
 	// run command
-	args := []string{"10s"}
-
-	command.ExecuteCommand("sleep", args)
+	command.RunCommand(payloadParsed.ItemId)
 
 	return nil
 }

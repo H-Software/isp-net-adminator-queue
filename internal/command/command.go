@@ -1,26 +1,43 @@
 package command
 
 import (
-	"fmt"
-	// "regexp"
 	"github.com/go-cmd/cmd"
 	"github.com/h-software/isp-net-adminator-queue/internal/log"
 )
 
+type Command struct {
+	cmd string
+	args []string
+}
+
 var (
 	logger *log.Logger
+	command Command
 )
 
 func init() {
 	logger = log.NewLogger(nil)
 }
 
-// func splitBySpaces(str string) []string {
-// 	r := regexp.MustCompile("[^\\s]+")
-// 	return r.FindAllString(str, -1)
-// }
+func RunCommand(itemId int) error {
+	cmd := prepareCommand(itemId)
 
-func ExecuteCommand(inputCommand string, inputCommandArgs []string) error {
+	logger.Infof("running command: %s, args: %s", cmd.cmd, cmd.args)
+
+	executeCommand(cmd.cmd, cmd.args)
+
+	return nil
+}
+
+func prepareCommand(itemId int) Command {
+
+	command.cmd = "php"
+	command.args = []string{"-v"}
+
+	return command
+}
+
+func executeCommand(inputCommand string, inputCommandArgs []string) error {
 
 	logger.Infof("executing command: %s, args: %s", inputCommand, inputCommandArgs)
 
@@ -49,13 +66,13 @@ func ExecuteCommand(inputCommand string, inputCommandArgs []string) error {
 					cmd.Stdout = nil
 					continue
 				}
-				fmt.Println(line)
-			case _, open := <-cmd.Stderr:
+				logger.Info(line)
+			case line, open := <-cmd.Stderr:
 				if !open {
 					cmd.Stderr = nil
 					continue
 				}
-				// fmt.Fprintln(os.Stderr, line)
+				logger.Error(line)
 			}
 		}
 	}()
@@ -66,9 +83,8 @@ func ExecuteCommand(inputCommand string, inputCommandArgs []string) error {
 	// Wait for goroutine to print everything
 	<-doneChan
 
-	// logger.Infof("command executed (StdOut: %v, stdErr: %v)", cmd.Stdout, cmd.Stderr)
-	logger.Infof("command executed (Status: %v) err: %v stdout: %v, complete: %v, exit code: %v",
-		status, cmd.Stderr, cmd.Stdout, status.Complete, status.Exit)
+	logger.Infof("command executed (PID: %v, complete: %v, exit code: %v)",
+		status.PID, status.Complete, status.Exit)
 
 	return nil
 }
