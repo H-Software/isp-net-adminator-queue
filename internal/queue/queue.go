@@ -9,10 +9,19 @@ import (
 	"strings"
 	"time"
 
+	"github.com/h-software/isp-net-adminator-queue/internal/command"
 	"github.com/h-software/isp-net-adminator-queue/internal/flag"
 	"github.com/h-software/isp-net-adminator-queue/internal/log"
 	"github.com/hibiken/asynq"
 )
+
+type AdminatorTaskType int
+
+type WorkItemPayload struct {
+	ItemId    int    `json:"item_id"`
+	CreatedAt int    `json:"createdAt"`
+	CreatedBy string `json:"createdBy"`
+}
 
 const (
 	TypeAdminatorWorkItem = "adminator3:workitem:3" // adminator3:workitem:basic
@@ -20,11 +29,7 @@ const (
 	TypeAdminatorWorkItemAgg = "adminator3:workitem:agg"
 
 	payloadSeparator = "\n"
-)
 
-type AdminatorTaskType int
-
-const (
 	WorkItem AdminatorTaskType = iota
 	EmailItem
 )
@@ -32,12 +37,6 @@ const (
 var (
 	logger *log.Logger
 )
-
-type WorkItemPayload struct {
-	ItemId    int    `json:"item_id"`
-	CreatedAt int    `json:"createdAt"`
-	CreatedBy string `json:"createdBy"`
-}
 
 func init() {
 	logger = log.NewLogger(nil)
@@ -114,6 +113,11 @@ func HandleAggTaskPayload(ctx context.Context, task *asynq.Task, taskId string, 
 	} else {
 		logger.Infof("checksum for ItemId failed\n")
 	}
+
+	// run command
+	args := []string{"10s"}
+
+	command.ExecuteCommand("sleep", args)
 
 	return nil
 }

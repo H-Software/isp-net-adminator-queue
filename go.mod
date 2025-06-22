@@ -5,6 +5,7 @@ go 1.24
 toolchain go1.24.0
 
 require (
+	github.com/go-cmd/cmd v1.4.3
 	github.com/hibiken/asynq v0.25.1
 	go.opentelemetry.io/contrib/instrumentation/runtime v0.61.0
 	go.opentelemetry.io/otel v1.36.0
