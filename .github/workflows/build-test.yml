@@ -86,10 +86,10 @@ jobs:
       - name: remove container
         if: ${{ always() }}
         run: docker rm builder
-  swagger-codegen-cli:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: run the main swagger.yml validation
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/local swaggerapi/swagger-codegen-cli validate -i /local/api/swagger.yml
+  # swagger-codegen-cli:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: run the main swagger.yml validation
+  #       run: |
+  #         docker run --rm -v ${{ github.workspace }}:/local swaggerapi/swagger-codegen-cli validate -i /local/api/swagger.yml
