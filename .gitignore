@@ -1,6 +1,5 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
+# based on https://github.com/github/gitignore/blob/master/Go.gitignore
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -11,25 +10,39 @@
 # Test binary, built with `go test -c`
 *.test
 
-# Code coverage profiles and other test artifacts
+# Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-coverage.*
-*.coverprofile
-profile.cov
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-# Go workspace file
-go.work
-go.work.sum
+# GOBIN
+bin
 
-# env file
-.env
+# local go mod cache
+.pkg
 
-# Editor/IDE
-# .idea/
-# .vscode/
+# temporary files
+tmp
+
+# mac specific
+.DS_Store
+
+# directory for rw files (PV mounted into the container)
+# /assets/mnt folder should stay gitignored!
+assets/mnt/**
+!assets/mnt/.gitkeep
+dumps
+
+# go debug / delve
+__debug_bin
+
+# we support overloading ENV vars by parsing a dotenv formatted file
+# this file can be used for local testing (secrets!) but should never be commited into git
+.env.local
+
+# the postAttachCommand should clean this up, ensure it's not commited anyway
+.gitconfig.global
 
 # builds
 isp-net-adminator-queue
