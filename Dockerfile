@@ -1,4 +1,3 @@
-
 ### -----------------------
 # --- Stage: development
 # --- Purpose: Local development environment
@@ -266,4 +265,3 @@ WORKDIR /app
 # docker run <image> server
 # docker run <image> server --migrate
 ENTRYPOINT ["/app/app"]
-# CMD ["server", "--migrate"]

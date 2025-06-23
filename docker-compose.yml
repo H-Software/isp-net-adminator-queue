@@ -20,7 +20,7 @@ services:
       - go-pkg:/go/pkg
 
       # speed up tmp dirs in working directory by using separate volumes (not the host's filesystem)
-      - workdir-api-tmp:/app/api/tmp
+      # - workdir-api-tmp:/app/api/tmp
       - workdir-bin:/app/bin
       - workdir-tmp:/app/tmp
 
@@ -63,7 +63,6 @@ services:
       - /bin/sh
       - -c
       - |
-        sudo chown -R development:development /app/api/tmp
         sudo chown -R development:development /app/bin
         sudo chown -R development:development /app/tmp
         chmod +x /app/rksh

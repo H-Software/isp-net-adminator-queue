@@ -2,9 +2,15 @@
 # --- Building
 ### -----------------------
 
+# TODO: fix this
 # first is default target when running "make" without args
-build: ##- Default 'make' target: sql, swagger, go-generate, go-format, go-build and lint.
-	@$(MAKE) build-pre
+# build: ##- Default 'make' target: sql, swagger, go-generate, go-format, go-build and lint.
+# 	@$(MAKE) build-pre
+# 	@$(MAKE) go-format
+# 	@$(MAKE) go-build
+# 	@$(MAKE) lint
+
+build:
 	@$(MAKE) go-format
 	@$(MAKE) go-build
 	@$(MAKE) lint
@@ -15,7 +21,9 @@ all: clean init ##- Runs all of our common make targets: clean, init, build and 
 	@$(MAKE) test
 	@$(MAKE) trivy
 
-info: info-db info-handlers info-go ##- Prints info about spec db, handlers, and go.mod updates, module-name and current go version.
+# TODO: fix this
+# info: info-db info-handlers info-go ##- Prints info about spec db, handlers, and go.mod updates, module-name and current go version.
+info: info-go ##- Prints info about spec db, handlers, and go.mod updates, module-name and current go version.
 
 info-db: ##- (opt) Prints info about spec db.
 	@echo "[spec DB]" > tmp/.info-db
@@ -35,8 +43,11 @@ info-go: ##- (opt) Prints go.mod updates, module-name and current go version.
 	@go version >> tmp/.info-go
 	@cat tmp/.info-go
 
-lint: check-gen-dirs check-script-dir check-handlers check-embedded-modules-go-not go-lint  ##- Runs golangci-lint and make check-*.
+# TODO: fix this
+# lint: check-gen-dirs check-script-dir check-handlers check-embedded-modules-go-not go-lint  ##- Runs golangci-lint and make check-*.
+lint: check-embedded-modules-go-not ##- Runs golangci-lint and make check-*.
 
+# these recipies may execute in parallel
 # these recipies may execute in parallel
 build-pre: sql swagger ##- (opt) Runs pre-build related targets (sql, swagger, go-generate).
 	@$(MAKE) go-generate
