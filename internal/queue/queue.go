@@ -117,6 +117,12 @@ func HandleAggTaskPayload(ctx context.Context, task *asynq.Task, taskId string, 
 	// run command
 	command.RunCommand(payloadParsed.ItemId)
 
+	if err := command.RunCommand(payloadParsed.ItemId); err != nil {
+		errM := fmt.Sprintf("runCommand failed: %v, (itemId: %d)", err, payloadParsed.ItemId)
+		logger.Error(errM)
+		return fmt.Errorf("%s", errM)
+	}
+
 	return nil
 }
 

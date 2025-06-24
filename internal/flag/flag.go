@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	FlagHelp bool
 	FlagRedisAddr string
 	FlagGroupGracePeriod time.Duration
 	FlagGroupMaxDelay time.Duration
@@ -18,9 +19,13 @@ var (
 func init() {
 
 	flag.String("redis-addr", "localhost:6379", "Redis server address")
-	flag.Duration("grace-period", 10*time.Second, "Group grace period")
-	flag.Duration("max-delay", 30*time.Second, "Group max delay")
-	flag.Int("max-size", 3, "Group max size")
+	flag.Duration("asynq-grace-period", 10*time.Second, "Group grace period")
+	flag.Duration("asynq-max-delay", 30*time.Second, "Group max delay")
+	flag.Int("asynq-max-size", 3, "Group max size")
+
+	flag.Bool("help", false, "print usage")
+
+	flag.CommandLine.MarkHidden("help")
 
 	flag.Parse()
 	viper.BindPFlags(flag.CommandLine)
@@ -29,9 +34,14 @@ func init() {
 	viper.SetEnvKeyReplacer(replacer)
 
 	viper.BindEnv("redis-addr")
-
+	
+	FlagHelp = viper.GetBool("help")
 	FlagRedisAddr = viper.GetString("redis-addr")
-	FlagGroupGracePeriod = viper.GetDuration("grace-period")
-	FlagGroupMaxDelay = viper.GetDuration("max-delay")
- 	FlagGroupMaxSize = viper.GetInt("max-size")
+	FlagGroupGracePeriod = viper.GetDuration("asynq-grace-period")
+	FlagGroupMaxDelay = viper.GetDuration("asynq-max-delay")
+ 	FlagGroupMaxSize = viper.GetInt("asynq-max-size")
+}
+
+func PrintDefaults() {
+	flag.PrintDefaults()
 }
