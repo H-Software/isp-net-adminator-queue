@@ -5,7 +5,10 @@ import (
 	"github.com/hibiken/asynq"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
+	"os"
 	// "net/http"
+	"github.com/h-software/isp-net-adminator-queue/internal/command"
+	"github.com/h-software/isp-net-adminator-queue/internal/flag"
 	"github.com/h-software/isp-net-adminator-queue/internal/log"
 	"github.com/h-software/isp-net-adminator-queue/internal/queue"
 	"sync"
@@ -186,6 +189,17 @@ func initMeterProvider() *sdkmetric.MeterProvider {
 // }
 
 func main() {
+
+	if flag.FlagHelp {
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+
+	if flag.FlagPhp {
+		command.ExecuteCommand("php", []string{"-v"})
+
+		os.Exit(0)
+	}
 
 	tp := initTracerProvider()
 	defer func() {

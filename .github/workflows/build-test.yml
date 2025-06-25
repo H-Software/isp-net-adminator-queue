@@ -67,13 +67,13 @@ jobs:
         run: docker exec builder bash -c 'make get-embedded-modules-count && make get-embedded-modules'
       - name: "binary: licenses"
         run: docker exec builder make get-licenses
-      # - name: docker run (target app)
+      - name: docker run (target app)
       #   # run: |
       #   #   docker run --env-file $DOCKER_ENV_FILE --network "${{ job.services.postgres.network }}" allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} help
       #   #   docker run --env-file $DOCKER_ENV_FILE --network "${{ job.services.postgres.network }}" allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} -v
       #   #   docker run --env-file $DOCKER_ENV_FILE --network "${{ job.services.postgres.network }}" allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} env
-      #   run: |
-      #     timeout 60s docker run --env-file $DOCKER_ENV_FILE allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} help
+        run: |
+          timeout 60s docker run --env-file $DOCKER_ENV_FILE allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} --help
       #     timeout 60s docker run --env-file $DOCKER_ENV_FILE allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} env          
       - name: upload trivy scan results to GitHub security tab
         # Currently limited to master because of the following:
