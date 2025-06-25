@@ -37,7 +37,7 @@ func RunCommand(itemId int) error {
 		command.cmd = "php"
 		command.args = []string{fmt.Sprintf("%v/AdminatorWorkItems/mk_rh_restriction.php", ext_scripts_path), gateway_3_fqdn}
 
-		executeCommand(command.cmd, command.args)
+		ExecuteCommand(command.cmd, command.args)
 
 		// $mess_ok = "gateway-3-restriction ok ";
 		// $mess_er = "gateway-3-restriction error ";
@@ -47,7 +47,7 @@ func RunCommand(itemId int) error {
 		command.cmd = "php"
 		command.args = []string{fmt.Sprintf("%v/AdminatorWorkItems/mk_rh_restriction.php", ext_scripts_path), gateway_wifi_fqdn}
 
-		executeCommand(command.cmd, command.args)
+		ExecuteCommand(command.cmd, command.args)
 
 		// executeCommand(command.cmd, command.args)
 
@@ -63,7 +63,7 @@ func RunCommand(itemId int) error {
 
 		command.cmd = "php"
 		command.args = []string{"-v"}
-		executeCommand(command.cmd, command.args)
+		ExecuteCommand(command.cmd, command.args)
 
 	default:
 		// unknown itemId
@@ -79,7 +79,7 @@ func RunCommand(itemId int) error {
 	return nil
 }
 
-func executeCommand(inputCommand string, inputCommandArgs []string) error {
+func ExecuteCommand(inputCommand string, inputCommandArgs []string) error {
 
 	var errM error
 
@@ -88,7 +88,6 @@ func executeCommand(inputCommand string, inputCommandArgs []string) error {
 	// code based on example below
 	// https://github.com/go-cmd/cmd/blob/master/examples/blocking-streaming/main.go
 
-	// Disable output buffering, enable streaming
 	cmdOptions := cmd.Options{
 		Buffered:  false,
 		Streaming: true,
@@ -130,7 +129,7 @@ func executeCommand(inputCommand string, inputCommandArgs []string) error {
 	logger.Debugf("command executed (PID: %v, complete: %v, exit code: %v)",
 		status.PID, status.Complete, status.Exit)
 
-	if (status.Exit <= 0 || !status.Complete) {
+	if (status.Exit != 0 || !status.Complete) {
 		errM = fmt.Errorf("command failed! (exitCode: %d, complete: %t)", status.Exit, status.Complete);
 	}
 

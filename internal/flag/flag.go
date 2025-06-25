@@ -9,7 +9,11 @@ import (
 )
 
 var (
+	// for testing
 	FlagHelp bool
+	FlagPhp bool
+
+	// for asyncq
 	FlagRedisAddr string
 	FlagGroupGracePeriod time.Duration
 	FlagGroupMaxDelay time.Duration
@@ -24,6 +28,7 @@ func init() {
 	flag.Int("asynq-max-size", 3, "Group max size")
 
 	flag.Bool("help", false, "print usage")
+	flag.Bool("php-version", false, "print version of PHP")
 
 	flag.CommandLine.MarkHidden("help")
 
@@ -33,9 +38,12 @@ func init() {
 	replacer := strings.NewReplacer("-", "_")
 	viper.SetEnvKeyReplacer(replacer)
 
+	// environments variables support
 	viper.BindEnv("redis-addr")
 	
 	FlagHelp = viper.GetBool("help")
+	FlagPhp = viper.GetBool("php-version")
+
 	FlagRedisAddr = viper.GetString("redis-addr")
 	FlagGroupGracePeriod = viper.GetDuration("asynq-grace-period")
 	FlagGroupMaxDelay = viper.GetDuration("asynq-max-delay")
