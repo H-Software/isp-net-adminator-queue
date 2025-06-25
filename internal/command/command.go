@@ -54,7 +54,7 @@ func RunCommand(itemId int) error {
 		// $mess_ok = "gateway-wifi-iptables-restart ok ";
 		// $mess_er = "gateway-wifi-iptables-restart error ";
 	case 3, 4, 5, 6, 7, 8, 9, 10:
-		//reinhard-fiber (2) - iptables (net-n/sikana)
+		//gateway-fiber (2) - iptables (net-n/sikana)
 
 		// $cmd = "/root/bin/gateway-fiber.remote.exec2.sh \"/etc/init.d/iptables-adminator restart\" ";
 
@@ -72,6 +72,9 @@ func RunCommand(itemId int) error {
 		logger.Error(errM)
 		return fmt.Errorf("%s", errM)
 	}
+
+	// TODO: add more commands to case below from original code
+	// https://github.com/H-Software/isp-net-adminator/pull/260/files#diff-bf99864cec6493c7e3d8e681dd2fc01c1ffc7480b5728411b20c7af4bbf88b37L874
 
 	return nil
 }
