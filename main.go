@@ -196,9 +196,14 @@ func main() {
 	}
 
 	if flag.FlagPhp {
-		command.ExecuteCommand("php", []string{"-v"})
+		err := command.ExecuteCommand("php", []string{"-v"})
 
-		os.Exit(0)
+		if err != nil {
+			logger.Error(err)
+			os.Exit(1)
+		} else {
+			os.Exit(0)
+		}
 	}
 
 	tp := initTracerProvider()
