@@ -46,3 +46,10 @@ __debug_bin
 
 # builds
 isp-net-adminator-queue
+
+# PHP stuff
+external_scripts/AdminatorWorkItems/composer.phar
+
+external_scripts/AdminatorWorkItems/vendor
+
+external_scripts/AdminatorWorkItems/.php-cs-fixer.cache
