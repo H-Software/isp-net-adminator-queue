@@ -69,8 +69,21 @@ RUN apt-get update \
     tmux \
     rsync \
     trivy \
+    apt-transport-https \
+    wget \
     # --- END DEVELOPMENT ---
     #
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# PHP repo
+RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
+    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
+
+# PHP
+RUN apt-get update \
+    && apt-get install -y \
+    php8.2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -232,22 +245,29 @@ RUN make go-build
 # https://github.com/GoogleContainerTools/distroless/blob/master/base/README.md
 # The :debug image provides a busybox shell to enter (base-debian10 only, not static).
 # https://github.com/GoogleContainerTools/distroless#debug-images
-FROM gcr.io/distroless/base-debian12:debug AS app
+# FROM gcr.io/distroless/base-debian12:debug AS app
 
-# FROM debian:bookworm-slim AS app
-# RUN apt-get update \
-#     && apt-get install -y \
-#     #
-#     # Mandadory minimal linux packages
-#     # Installed at development stage and app stage
-#     # Do not forget to add mandadory linux packages to the base development Dockerfile stage above!
-#     #
-#     # -- START MANDADORY --
-#     ca-certificates \
-#     # --- END MANDADORY ---
-#     #
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/*
+FROM debian:bookworm-slim AS app
+
+RUN apt-get update \
+    && apt-get install -y \
+    ca-certificates \
+    lsb-release \
+    apt-transport-https \
+    wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# PHP repo
+RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
+    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
+
+# PHP
+RUN apt-get update \
+    && apt-get install -y \
+    php8.2 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/bin/app /app/
 
