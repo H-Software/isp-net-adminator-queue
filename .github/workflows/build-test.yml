@@ -74,7 +74,7 @@ jobs:
       #   #   docker run --env-file $DOCKER_ENV_FILE --network "${{ job.services.postgres.network }}" allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} env
         run: |
           timeout 60s docker run --env-file $DOCKER_ENV_FILE allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} --help
-          timeout 60s docker run --env-file $DOCKER_ENV_FILE allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} --php-info         
+          timeout 60s docker run --env-file $DOCKER_ENV_FILE allaboutapps.dev/aw/go-starter:app-${GITHUB_SHA} --php-version       
       - name: upload trivy scan results to GitHub security tab
         # Currently limited to master because of the following:
         # Workflows triggered by Dependabot on the "push" event run with read-only access. Uploading Code Scanning results requires write access.
