@@ -269,7 +269,17 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 COPY --from=builder /app/bin/app /app/
+
+COPY external_scripts /app
+
+RUN cd external_scripts/AdminatorWorkItems \
+    && composer install --no-dev
+
+RUN rm -rf /usr/bin/composer
 
 WORKDIR /app
 
