@@ -267,6 +267,10 @@ RUN apt-get update \
     && apt-get install -y \
     php8.2 \
     php8.2-zip \
+    php8.2-mysqli \
+    php8.2-opentelemetry \
+    php8.2-pgsql \
+    php8.2-sockets \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
