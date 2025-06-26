@@ -276,6 +276,8 @@ COPY --from=builder /app/bin/app /app/
 
 COPY external_scripts /app
 
+RUN ls -lhR /app/external_scripts
+
 RUN cd external_scripts/AdminatorWorkItems \
     && composer install --no-dev
 
