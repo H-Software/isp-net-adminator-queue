@@ -274,7 +274,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY --from=builder /app/bin/app /app/
 
-COPY external_scripts /app
+COPY external_scripts /app/external_scripts
 
 RUN ls -lhR /app/external_scripts
 
