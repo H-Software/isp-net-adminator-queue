@@ -266,6 +266,7 @@ RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 RUN apt-get update \
     && apt-get install -y \
     php8.2 \
+    php8.2-zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
