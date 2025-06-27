@@ -84,6 +84,13 @@ RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 RUN apt-get update \
     && apt-get install -y \
     php8.2 \
+    php8.2-zip \
+    php8.2-mysqli \
+    php8.2-opentelemetry \
+    php8.2-pgsql \
+    php8.2-sockets \
+    php8.2-curl \
+    php8.2-dom \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -271,6 +278,8 @@ RUN apt-get update \
     php8.2-opentelemetry \
     php8.2-pgsql \
     php8.2-sockets \
+    php8.2-curl \
+    php8.2-dom \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -280,8 +289,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY --from=builder /app/bin/app /app/
 
 COPY external_scripts /app/external_scripts
-
-RUN ls -lhR /app/external_scripts
 
 RUN cd /app/external_scripts/AdminatorWorkItems \
     && composer install --no-dev
