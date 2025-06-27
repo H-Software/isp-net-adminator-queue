@@ -89,17 +89,10 @@ RUN apt-get update \
     php8.2-opentelemetry \
     php8.2-pgsql \
     php8.2-sockets \
+    php8.2-curl \
+    php8.2-dom \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# PHP libs
-# RUN cd external_scripts/AdminatorWorkItems \
-#     && composer update
-
-RUN rm -rf /usr/bin/composer
 
 # env/vscode support: LANG must be supported, requires installing the locale package first
 # https://github.com/Microsoft/vscode/issues/58015
@@ -285,6 +278,8 @@ RUN apt-get update \
     php8.2-opentelemetry \
     php8.2-pgsql \
     php8.2-sockets \
+    php8.2-curl \
+    php8.2-dom \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
