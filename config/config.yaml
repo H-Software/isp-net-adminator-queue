@@ -1,0 +1,5 @@
+gateways:
+  gateway-wifi:
+    fqdn: 10.128.0.2
+  gateway-3:
+    fqdn: 10.128.0.3

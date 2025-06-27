@@ -3,7 +3,7 @@ package flag
 import (
 	"strings"
 	"time"
-
+	"fmt"
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -11,13 +11,16 @@ import (
 var (
 	// for testing
 	FlagHelp bool
-	FlagPhp bool
+	FlagPhp  bool
 
 	// for asyncq
-	FlagRedisAddr string
+	FlagRedisAddr        string
 	FlagGroupGracePeriod time.Duration
-	FlagGroupMaxDelay time.Duration
-	FlagGroupMaxSize  int
+	FlagGroupMaxDelay    time.Duration
+	FlagGroupMaxSize     int
+
+	ConfigGatewayWifiFqdn string
+	ConfigGateway3Fqdn string
 )
 
 func init() {
@@ -40,14 +43,27 @@ func init() {
 
 	// environments variables support
 	viper.BindEnv("redis-addr")
-	
+
 	FlagHelp = viper.GetBool("help")
 	FlagPhp = viper.GetBool("php-version")
 
 	FlagRedisAddr = viper.GetString("redis-addr")
 	FlagGroupGracePeriod = viper.GetDuration("asynq-grace-period")
 	FlagGroupMaxDelay = viper.GetDuration("asynq-max-delay")
- 	FlagGroupMaxSize = viper.GetInt("asynq-max-size")
+	FlagGroupMaxSize = viper.GetInt("asynq-max-size")
+
+	viper.SetConfigName("config") // name of config file (without extension)
+	viper.SetConfigType("yaml") // REQUIRED if the config file does not have the extension in the name
+	viper.AddConfigPath("config")   // path to look for the config file in
+
+	err := viper.ReadInConfig() // Find and read the config file
+	if err != nil { // Handle errors reading the config file
+		panic(fmt.Errorf("fatal error config file: %w", err))
+	}
+
+	ConfigGatewayWifiFqdn = viper.GetString("gateways.gateway-wifi.fqdn")
+	ConfigGateway3Fqdn = viper.GetString("gateways.gateway-3.fqdn")
+
 }
 
 func PrintDefaults() {

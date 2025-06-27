@@ -65,7 +65,7 @@ func HandleWorkItemAggTask(ctx context.Context, task *asynq.Task) error {
 	}
 
 	if err := HandleAggTaskPayload(ctx, task, id, WorkItem); err != nil {
-		errM := fmt.Sprintf("handle aggreaged task payload failed: %v, id: %s", err, id)
+		errM := fmt.Sprintf("handle aggregated task payload failed: %v, id: %s", err, id)
 		logger.Error(errM)
 		return fmt.Errorf("%s", errM)
 	}
@@ -115,10 +115,8 @@ func HandleAggTaskPayload(ctx context.Context, task *asynq.Task, taskId string, 
 	}
 
 	// run command
-	command.RunCommand(payloadParsed.ItemId)
-
 	if err := command.RunCommand(payloadParsed.ItemId); err != nil {
-		errM := fmt.Sprintf("runCommand failed: %v, (itemId: %d)", err, payloadParsed.ItemId)
+		errM := fmt.Sprintf("run command failed: %v, (itemId: %d)", err, payloadParsed.ItemId)
 		logger.Error(errM)
 		return fmt.Errorf("%s", errM)
 	}
@@ -129,7 +127,7 @@ func HandleAggTaskPayload(ctx context.Context, task *asynq.Task, taskId string, 
 func RunServer() *asynq.Server {
 
 	logger.Infof("starting asynq server with params {%v, %v, %v, %v}",
-	 flag.FlagRedisAddr, flag.FlagGroupGracePeriod, flag.FlagGroupMaxDelay, flag.FlagGroupMaxSize)
+		flag.FlagRedisAddr, flag.FlagGroupGracePeriod, flag.FlagGroupMaxDelay, flag.FlagGroupMaxSize)
 
 	srv := asynq.NewServer(
 		asynq.RedisClientOpt{
