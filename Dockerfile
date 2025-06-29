@@ -290,6 +290,8 @@ COPY --from=builder /app/bin/app /app/
 
 COPY external_scripts /app/external_scripts
 
+COPY config /app/config
+
 RUN cd /app/external_scripts/AdminatorWorkItems \
     && composer install --no-dev
 

@@ -34,9 +34,7 @@ $login_pass = "";
 //api vars
 
 //ip adress device
-if (isset($_GET["ip"])) {
-    $ip = $_GET["ip"];
-} elseif (isset($_SERVER['argv']['1'])) {
+if (isset($_SERVER['argv']['1'])) {
     $ip = $_SERVER['argv']['1'];
 } else {
     echo "ERROR: Missing IP Adress. Aborting... \n";
